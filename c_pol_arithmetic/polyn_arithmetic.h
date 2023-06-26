@@ -29,16 +29,16 @@ namespace pol{
     struct Polynomial{
 
         uint64 bits;
-        uint8 numBits;
+        uint8 degree;
         
-        Polynomial(void) : bits(0), numBits(0) {}
+        Polynomial(void) : bits(0), degree(0) {}
 
         Polynomial(uint64 rhs) : bits(rhs) {
             uint8 check = 0;
             while( (1 << check) <= rhs ){
                 check++;
             }
-            numBits = check;
+            degree = check;
         }
 
         /**
@@ -58,10 +58,10 @@ namespace pol{
         }
 
         /**
-         * @brief return -1 if index > numBits
+         * @brief return -1 if index > degree
         */
         signed int operator[](int index) const noexcept {
-            if (index > numBits){
+            if (index > degree){
                 return -1;
             }
             else {
@@ -69,14 +69,14 @@ namespace pol{
             }
         }
 
-        friend Polynomial operator+(const Polynomial & lhs, const Polynomial & rhs) noexcept;
+        friend Polynomial inline operator+(const Polynomial & lhs, const Polynomial & rhs) noexcept;
         friend Polynomial operator*(const Polynomial & lhs, const Polynomial & rhs) noexcept;
         friend Polynomial operator%(const Polynomial & lhs, const Polynomial & rhs) noexcept;
 
 
         private:
             /**
-             * @brief: does not do position vs numBits checking
+             * @brief: does not do position vs degree checking
             */
             void inline stclBitAt(const byte & newVal, const byte & position) noexcept {
                 if (newVal){ // set
@@ -96,7 +96,7 @@ namespace pol{
     }; // STRUCT
 
 
-    Polynomial operator+(const Polynomial & lhs, const Polynomial & rhs) noexcept {
+    Polynomial inline operator+(const Polynomial & lhs, const Polynomial & rhs) noexcept {
         return (Polynomial) ( lhs.bits ^ rhs.bits );
     }
 
@@ -104,8 +104,8 @@ namespace pol{
         
         Polynomial result;
 
-        for (int i = 0; i < lhs.numBits; i++){ // complexity O(numBits in lhs + numBits in rhs) = O(num bits in result)
-            for (int j = 0; j < rhs.numBits; j++){
+        for (int i = 0; i < lhs.degree; i++){ // complexity O(degree in lhs + degree in rhs) = O(num bits in result)
+            for (int j = 0; j < rhs.degree; j++){
                 // cout << "lhs[i]: " << lhs[i] << " " << "rhs[j]: " << rhs[j] << endl;
                 if (lhs[i] == 1 && rhs[j] == 1){
                     result.bits ^= (1 << (i + j));
@@ -115,8 +115,32 @@ namespace pol{
         return result;
     }
 
+
+
+    /**
+     * @brief: primary school division algorithm with polynomial addition/ subtraction (both correspond to bitw xor)
+    */
     Polynomial operator%(const Polynomial & lhs, const Polynomial & rhs) noexcept {
+
+        // Polynomial dividend = lhs; // TO DO: name these more concisely
+        Polynomial divisor = rhs;
+        Polynomial quotient;
+        Polynomial remainder = lhs;
+
+        signed int degreeDifference = lhs.degree - rhs.degree;
+
+        while ( degreeDifference >= 0 ) {
+            Polynomial shiftedDivisor(divisor.bits << degreeDifference); 
+            remainder = remainder + shiftedDivisor; // BASE 2: both addition and subtraction correspond to the bitwise xor operation
+            degreeDifference = remainder.degree - divisor.degree;
+
+            // cout << "shifterdDivisor: " << (string) (shiftedDivisor) << endl;
+            // cout << "remainder: " << (string) (remainder) << endl;
+            // cout << "new degreeDifference: " << degreeDifference << endl;
+        }
         
+        return remainder;
+
     }
 } // NAMESPACE
 

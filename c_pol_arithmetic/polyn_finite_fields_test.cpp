@@ -9,10 +9,10 @@ int main(int argc, char * argv[]){
 
     typedef pol::Polynomial polyn;
 
-    polyn p("10110");
-    polyn p2("1011111");
+    polyn p("101");
+    polyn p2("110100111");
 
-    polyn p3 = p * p2;
+    polyn p3 = p2 % p;
 
     cout << (string) (p3) << endl;
     
