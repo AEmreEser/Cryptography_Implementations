@@ -1,5 +1,5 @@
 from typing import List
-import euler_theorem as eu_th
+import finite_field_tests.euler_theorem as eu_th
 
 # adjust the flags to run different tests:
 checkTotient : bool = False
