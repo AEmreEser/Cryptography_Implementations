@@ -1,4 +1,4 @@
-import finite_field_tests.finite_field as finField
+import finite_field_and_RSA.finite_field as finField
 
 fourWay = finField.FiniteField(11)
 
