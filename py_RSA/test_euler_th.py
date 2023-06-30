@@ -1,11 +1,10 @@
 from typing import List
-import euler_theorem as eu_th
+import eulers_theorem as eu_th
 
 # adjust the flags to run different tests:
 checkTotient : bool = False
 checkTheorem : bool = False
 checkTheorem_onlyPrimes : bool = False
-
 
 primes : List[int] = [2,3,5,7,11,13,17,19,23,29,31,37,41,43,47]
 

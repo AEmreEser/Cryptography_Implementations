@@ -1,8 +1,5 @@
-import euler_theorem as eu_th
+import eulers_theorem as eu_th
 from typing import List
-
-
-
 
 # calculates: a^m mod n
 def modExponent(a : int, m : int, n: int) -> int: # algorithm due Diadel
