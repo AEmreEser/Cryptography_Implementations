@@ -17,20 +17,60 @@ def modExpoTest(a : int = 2) -> None:
         print( f"Found: {a} ^ {m} % {n} = {test}" , ( ("PASSED") if ( test == ( (a ** m) % n )) else ("FAIL") ), sep='\t\t')
 
 
+def rsa_singleCharTest(Message : str, p : int , q : int ) -> None:
+
+    if (p * q <= 256):
+        raise Exception(f"Not all ascii characters could be encrypted and decrypted with p = {p} and q = {q}. Please pick p and q such that p * q > 256")
+
+    n : int = p * q
+    totn : int = euth.totient(n)
+
+    print(f"p := {p}, q := {q}, n := {n}")
+    print(f"totient(n) = {totn}")
+
+    d : int = rsa.findSuitableD(p, q)
+    e : int = rsa.modInverse(d, totn)
+
+    print(f"d = {d}, e = {e}, (e * d) mod tot(n) = { ( e * d) % totn }")
+
+    M : int = ord(Message)
+    C: int = rsa.enc_dec_singleChar(M, e, n)
+    decResult : int = rsa.enc_dec_singleChar(C, d, n)
+
+    print(f"Message: {M}, Ciphertext: {C}, decrypted result: {decResult}")
+
+
+def rsa_word_test(M: str, p : int, q : int, verbose: bool = False) -> None:
+
+    if (p * q <= 256):
+        raise Exception(f"Not all ascii characters could be encrypted and decrypted with p = {p} and q = {q}. Please pick p and q such that p * q > 256")
+
+    n : int = p * q
+    totn : int = euth.totient(n)
+
+    if (verbose):
+        print(f"p := {p}, q := {q}, n := {n}")
+        print(f"totient(n) = {totn}")
+
+    d : int = rsa.findSuitableD(p, q)
+    e : int = rsa.modInverse(d, totn)
+
+    if (verbose):
+        print(f"d = {d}, e = {e}, (e * d) mod tot(n) = { ( e * d) % totn }")
+
+    C: str = rsa.rsa_word(M, e, n)
+    decResult : str = rsa.rsa_word(C, d, n)
+
+    print(f"Message: {M}, Ciphertext: {C}, decrypted result: {decResult}")
+
 
 # test main:
 
 # modExpoTest(5)
 # modExpoTest(2)
 
-p : int = testTot.primes[7]
-q : int = testTot.primes[10]
-n : int = p * q
+# rsa_singleCharTest('T', 29, 31)
 
-print(f"p := {p}, q := {q}, n := {n}")
-print(f"totient(n) = {euth.totient(n)}")
+rsa_word_test("test test pesp pesp", 29, 31)
 
-
-
-M : int = ord('C')
-C: int = rsa.enc_dec_singleChar(M, e_d=13, n=n)
+rsa_word_test("insert creative test message here", 13, 23)

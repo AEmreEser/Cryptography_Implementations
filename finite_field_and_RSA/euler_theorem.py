@@ -24,8 +24,6 @@ def totient (n : int) -> int:
 
     return count
 
-
-
 def theorem_func ( a : int, n : int , verbose : bool = False) -> bool:
     if (verbose):
         print(f"totient: {totient(n)}, a ** totient: {a ** totient(n)}") # should probably just record these in variables for efficiency
