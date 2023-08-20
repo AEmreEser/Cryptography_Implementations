@@ -2,3 +2,4 @@
 ### Current Status:
 - RSA: complete
 - AES: under development
+- Elliptic curve Diffie Hellmann: Coming soon
